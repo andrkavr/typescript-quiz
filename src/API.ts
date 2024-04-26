@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { shuffleArray } from "./utils";
 
 export enum Difficulty {
   EASY = "easy",
@@ -23,6 +23,17 @@ export enum QuestionCategories {
   ANIMALS = 27,
 }
 
+export type Question = {
+  category: string;
+  correct_answer: string;
+  difficulty: string;
+  incorrect_answers: string[];
+  question: string;
+  type: string;
+};
+
+export type QuestionState = Question & { answers: string[] };
+
 export const questionFetch = async (
   amount: number,
   difficulty: Difficulty,
@@ -35,46 +46,14 @@ export const questionFetch = async (
     endpoint = `https://opentdb.com/api.php?amount=${amount}&difficulty=${difficulty}&type=multiple`;
   }
 
-  const endpointAnyDiff = `https://opentdb.com/api.php?amount=${amount}&category=${category}&type=multiple`;
-
-  const categories: string[] = [
-    "Any Category",
-    "General Knowledge",
-    "Entertainment: Books",
-    "Entertainment: Film",
-    "Entertainment: Music",
-    "Entertainment: Television",
-    "Entertainment: Video Games",
-    "Science & Nature",
-    "Science: Computers",
-    "Mythology",
-    "Sports",
-    "Geography",
-    "History",
-    "Celebrities",
-    "Animals",
-  ];
-  // Any cat : https://opentdb.com/api.php?amount=10&type=multiple
-  // General cat : https://opentdb.com/api.php?amount=10&category=9
-  // Movie cat: https://opentdb.com/api.php?amount=10&category=11&type=multiple
-  const quizCat = {
-    "Any Category": 9,
-    "General Knowledge": 9,
-    "Entertainment: Books": 10,
-    "Entertainment: Film": 11,
-    "Entertainment: Music": 12,
-    "Entertainment: Television": 14,
-    "Entertainment: Video Games": 15,
-    "Science & Nature": 17,
-    "Science: Computers": 18,
-    Mythology: 20,
-    Sports: 21,
-    Geography: 22,
-    History: 23,
-    Celebrities: 26,
-    Animals: 27,
-  };
-
   const data = await (await fetch(endpoint)).json();
-  console.log(data);
+  //   console.log(data);
+  //   console.log(data.results);
+  return data.results.map((question: Question) => ({
+    ...question,
+    answers: shuffleArray([
+      ...question.incorrect_answers,
+      question.correct_answer,
+    ]),
+  }));
 };
