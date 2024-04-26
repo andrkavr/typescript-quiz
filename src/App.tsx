@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { Footer } from "./Footer";
+import { questionFetch } from "./API";
+//Components
 import { QuestionCard } from "./components/QuestionCard";
+//Types
+import { Difficulty, QuestionCategories } from "./API";
 
 function App() {
   //question-related
@@ -15,6 +19,9 @@ function App() {
   const [gameOver, setGameOver] = useState(true);
 
   //functions
+  console.log(
+    questionFetch(TOTAL_QUESTIONS, Difficulty.EASY, QuestionCategories.SPORTS)
+  );
   const startTrivia = async () => {};
   const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {};
   const nextQuestion = () => {};
@@ -26,14 +33,14 @@ function App() {
       </button>
       <p className="score">Score: </p>
       <p className="loading">Loading Questions...</p>
-      <QuestionCard
+      {/* <QuestionCard
         questionNumber={qNumber + 1}
         totalQuestions={TOTAL_QUESTIONS}
         question={questions[qNumber].question}
         answers={questions[qNumber].answers}
         userAnswer={userAnswers ? userAnswers[qNumber] : undefined}
         callback={checkAnswer}
-      />
+      /> */}
       <button className="next" onClick={nextQuestion}>
         Next Question
       </button>

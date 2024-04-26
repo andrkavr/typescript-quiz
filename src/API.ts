@@ -1,7 +1,42 @@
 import { useEffect, useState } from "react";
 
-export const API = () => {
-  const [loading, setLoading] = useState(true);
+export enum Difficulty {
+  EASY = "easy",
+  MEDIUM = "medium",
+  HARD = "hard",
+}
+
+export enum QuestionCategories {
+  GENERAL_KNOWLEDGE = 9,
+  BOOKS = 10,
+  FILM = 11,
+  MUSIC = 12,
+  TV = 14,
+  VIDEO_GAMES = 15,
+  SCIENCE_AND_NATURE = 17,
+  COMPUTERS = 18,
+  MYTHOLOGY = 20,
+  SPORTS = 21,
+  GEOGRAPHY = 22,
+  HISTORY = 23,
+  CELEBRITIES = 26,
+  ANIMALS = 27,
+}
+
+export const questionFetch = async (
+  amount: number,
+  difficulty: Difficulty,
+  category?: number
+) => {
+  let endpoint;
+  if (category) {
+    endpoint = `https://opentdb.com/api.php?amount=${amount}&category=${category}&difficulty=${difficulty}&type=multiple`;
+  } else {
+    endpoint = `https://opentdb.com/api.php?amount=${amount}&difficulty=${difficulty}&type=multiple`;
+  }
+
+  const endpointAnyDiff = `https://opentdb.com/api.php?amount=${amount}&category=${category}&type=multiple`;
+
   const categories: string[] = [
     "Any Category",
     "General Knowledge",
@@ -40,19 +75,6 @@ export const API = () => {
     Animals: 27,
   };
 
-  useEffect(() => {
-    const questionFetch = async () => {
-      const questions = await fetch(
-        "https://opentdb.com/api.php?amount=10&category=9&type=multiple"
-      );
-      const jsonQuestions = await questions.json();
-      setLoading(!loading);
-
-      return jsonQuestions;
-    };
-
-    questionFetch();
-  }, []);
-
-  //   return <div>API</div>;
+  const data = await (await fetch(endpoint)).json();
+  console.log(data);
 };
